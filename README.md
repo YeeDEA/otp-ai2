@@ -81,7 +81,11 @@ flowchart LR
 
 ## OCR engine comparison
 
-Four engines were tried on Korean chat screenshots before committing to one: **EasyOCR**, **RapidOCR**, **PaddleOCR**, and **Pororo** (which failed to install in the Colab environment and was dropped). The recorded comparison, from `notebooks/ocr_engine_comparison.ipynb`:
+Four engines were considered — **EasyOCR**, **RapidOCR**, **PaddleOCR**, **Pororo** — but they were not eliminated for the same kind of reason, and the difference matters when reading the table below.
+
+**Pororo was ruled out at install time, not on quality.** `pip install pororo` could not resolve in the Colab environment: every published version from 0.3.1 to 0.4.2 pins `torch==1.6.0`, pip walked all eight of them, and the resolve ended in `ResolutionImpossible`. The attempt and its full pip error log are kept in [`notebooks/pororo_install_failed.ipynb`](notebooks/pororo_install_failed.ipynb) — the next cell, which would have called `Pororo(task="ocr", lang="ko")`, was never executed. **There is therefore no accuracy or speed measurement for Pororo anywhere in this project, and none should be inferred.** It was dropped because its dependency pin could not be satisfied in the runtime available, which is a fact about the library's packaging rather than a finding about its Korean OCR quality.
+
+The remaining three were actually run and scored against each other on Korean chat screenshots, in `notebooks/ocr_engine_comparison.ipynb`:
 
 ![OCR engine comparison](assets/ocr_engine_comparison.png)
 
@@ -100,6 +104,7 @@ These are small-sample, hand-tallied numbers from the project's own test screens
 | `kakao_ocr_easyocr_early_experiment.ipynb` | 2025-11-16 | First attempt: EasyOCR on a KakaoTalk screenshot, naive column-split parsing. Timestamps like `01:75` show why raw OCR wasn't enough. |
 | `kakao_ocr_paddle_chatlog.ipynb` | 2025-11-17 | PaddleOCR (korean_PP-OCRv5) → full screenshot-to-chatlog conversion. First convincing end-to-end result. |
 | `kakao_ocr_easyocr_gemini_correction.ipynb` | 2025-11-25 | EasyOCR output post-corrected with Gemini (Vertex AI) — patching a weak engine with an LLM. |
+| `pororo_install_failed.ipynb` | 2025-11-25 | Pororo OCR attempt. `pip install pororo` ended in `ResolutionImpossible` — all 8 published versions pin `torch==1.6.0`. Never ran; the only record that Pororo was tried at all. |
 | `rapidocr_test.ipynb` | 2025-11-27 | RapidOCR trial on Korean chat text. Failed badly (confidently wrong strings); ruled out. |
 | `kakao_parser_easyocr.ipynb` | 2025-11-30 | EasyOCR-based KakaoTalk parser refactored into a module. |
 | `spynet_scroll_video_pipeline.ipynb` | 2025-11-30 | SPyNet optical-flow decomposition of scroll videos into screenshots, then OCR + parsing. |
@@ -128,7 +133,7 @@ Then point a notebook at your own screenshot (paths like `image.png` / `Test_Dat
 ## Limitations & status
 
 - Notebook-stage experiments — no packaged library or tests; the productionized version is the Modal service linked above.
-- The engine comparison is informal (a handful of screenshots, hand-scored line accuracy), enough to pick an engine but not a benchmark.
+- The engine comparison is informal (a handful of screenshots, hand-scored line accuracy), enough to pick an engine but not a benchmark. It also covers three engines, not four: Pororo failed to install and was never measured.
 - Parsing heuristics are tuned to specific KakaoTalk/Instagram layouts and resolutions; UI updates can break the coordinate rules.
 - Timestamp OCR remains the weakest link (colon/digit confusions), partially recovered by the LLM correction pass.
 - The oTP project received the popularity award at the GDGoC Yonsei December 2025 demo.
