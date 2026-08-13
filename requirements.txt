@@ -1,0 +1,20 @@
+# OCR engines compared in the notebooks
+paddleocr>=3.3,<3.4
+paddlepaddle>=2.6
+easyocr>=1.7
+rapidocr-onnxruntime>=1.3
+
+# SPyNet optical flow (scroll-video decomposition)
+torch>=2.1
+tqdm
+
+# Imaging / parsing
+opencv-python-headless
+Pillow
+numpy
+
+# Charts (ocr_engine_comparison.ipynb)
+matplotlib
+
+# LLM correction pass (kakao_ocr_easyocr_gemini_correction.ipynb)
+google-cloud-aiplatform

@@ -1,0 +1,23 @@
+# Notebook checkpoints / caches
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+
+# Model weights and datasets (downloaded at runtime, not committed)
+weights/
+*.pth
+*.pytorch
+*.onnx
+Test_Dataset/
+runs/
+*.mp4
+*.csv
+
+# Environments
+.venv/
+venv/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
